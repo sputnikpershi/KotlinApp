@@ -3,7 +3,7 @@ fun main() {
     //  sendMoneyTax(10000)
 
     //2
-    //     print(returnLikeEndings(11))
+    //   print(returnLikeEndings(1111))
 
     //3
     //discountMusic(1000, true)
@@ -27,9 +27,10 @@ fun sendMoneyTax (amount: Int): Double  {
 
 fun returnLikeEndings(likes: Int): String {
     val stringLikes = likes.toString()
+    val lastTwoNumber = stringLikes.takeLast(2)
     val lastSymbol = stringLikes.last()
 
-    if (likes == 11) {
+    if (lastTwoNumber == "11") {
         return ("понравилось $likes людям")
     }
     val result = when (lastSymbol) {
