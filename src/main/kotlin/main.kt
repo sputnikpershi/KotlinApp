@@ -1,54 +1,34 @@
 @file:Suppress("DEPRECATION")
 
+import kotlin.math.max
+
+const val ERROR_NAME = -1.0
+const val ERROR_TRANSFER_LIMIT = -2.0
+const val ERROR_NEW_VK_LIMIT = -3.0
+
 fun  main () {
-
-    /*
-    Задача №1. Только что
-    Социальные сети и мессенджеры показывают, когда ваш собеседник последний раз был онлайн:
-
-    Задача №2. Разная комиссия
-     */
-
     //agoToText(secAgo = 259200)
-    println(getCommission(type = "maestro", historySum = 0, 299))
+    println(transferMoney(historySum = 10000.0, sendSum = 100000.0, type = "maestro"))
 }
 
 
-fun getCommission(type: String = "VK Pay", historySum: Int, sumWillSend: Int): Double {
-    var commission = 0.0
-    val totalSum = historySum + sumWillSend
+
+fun transferMoney(historySum: Double, sendSum: Double,type: String): Double {
     val text = type.lowercase()
-    when (text) {
-        "master card" -> commission = commissionForCardMaster(amount = totalSum, sumForSend = sumWillSend, percent = 0.006, addition = 20)
-        "maestro" -> commission = commissionForCardMaster(amount = totalSum, sumForSend = sumWillSend, percent = 0.006, addition = 20)
-        "visa" -> commission = sendMoneyTax(amount = sumWillSend, percent = 0.0075, minTax = 35)
-        "mir" ->  commission = sendMoneyTax(amount = sumWillSend, percent = 0.0075, minTax = 35)
-        "vk pay" -> commission = 0.0
-        else -> println("Платеж не может быть обработан")
+    if (sendSum < 150_000 && (historySum + sendSum) < 600_000) {
+        return when (text) {
+            "master card" -> if (sendSum + historySum < 300.0 || sendSum + historySum > 75000.0) sendSum * 0.006 + 20.0 else return  0.0
+            "maestro" -> if (sendSum + historySum < 300.0 || sendSum + historySum > 75000.0) sendSum * 0.006 + 20.0 else return  0.0
+            "visa" -> max(a = 35.0, sendSum * 0.0075)
+            "mir" -> max(a = 35.0, sendSum * 0.0075)
+            "vk pay" -> if (sendSum < 15_000 && historySum + sendSum < 40_000) return 0.0 else return ERROR_NEW_VK_LIMIT
+            else ->  ERROR_NAME
+        }
+    } else {
+        return ERROR_TRANSFER_LIMIT
     }
-    return commission
 }
 
-fun sendMoneyTax (amount: Int, percent: Double, minTax : Int): Double  {
-    val value = amount*percent
-    val result =  if ( value > 35) {
-        value
-    } else {
-        minTax.toDouble()
-    }
-    println("Tax equal to $result")
-    return result
-}
-
-fun commissionForCardMaster (amount: Int, sumForSend: Int, percent: Double, addition: Int): Double  {
-    val value = sumForSend*percent
-    val minTax = 20
-    return if (amount < 300 || amount > 75000) {
-        value + minTax.toDouble()
-    } else {
-        0.0
-    }
-}
 
 fun agoToText(secAgo: Int) = println(returnDateText(secAgo))
 
