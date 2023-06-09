@@ -27,7 +27,7 @@ class MainTest {
         val monthSum = 10000.0
         val transferSum = 11000.0
         val result = transferMoney(historySum = monthSum, sendSum = transferSum, type = "vk py")
-        assertEquals(expected = ERROR_NAME, actual = result)
+        assertEquals(expected = ERROR_VK_LIMIT, actual = result)
     }
 
 
